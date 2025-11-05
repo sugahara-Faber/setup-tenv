@@ -9,6 +9,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+const core = __nccwpck_require__(7484);
+
 class Build {
   constructor (name, url) {
     this.name = name;
@@ -20,13 +22,13 @@ class Release {
   constructor (releaseMeta) {
     this.version = releaseMeta.tag_name.replace('v', '');
     this.builds = releaseMeta.assets.map(asset => new Build(asset.name, asset.browser_download_url));
-    console.log(this.builds);
+    core.debug(this.builds);
   }
 
   getBuild (platform, arch) {
     const extension = platform === 'Windows' ? 'zip' : 'tar.gz';
     const requiredName = `tenv_v${this.version}_${platform}_${arch}.${extension}`;
-    console.log(requiredName);
+    core.info(requiredName);
     return this.builds.find(build => build.name === requiredName);
   }
 }
@@ -175,7 +177,7 @@ async function downloadAndExtractCLI (url) {
     core.debug(`Moved download to ${fixedPathToCLIZip}`);
     pathToCLI = await tc.extractZip(fixedPathToCLIZip);
   } else {
-    pathToCLI = await tc.extractZip(pathToCLIZip);
+    pathToCLI = await tc.extractTar(pathToCLIZip);
   }
 
   core.debug(`tenv CLI path is ${pathToCLI}.`);

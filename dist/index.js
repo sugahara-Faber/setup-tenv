@@ -24,7 +24,8 @@ class Release {
   }
 
   getBuild (platform, arch) {
-    const requiredName = `tenv_v${this.version}_${platform}_${arch}.zip`;
+    const extension = platform === 'Windows' ? 'zip' : 'tar.gz';
+    const requiredName = `tenv_v${this.version}_${platform}_${arch}.${extension}`;
     console.log(requiredName);
     return this.builds.find(build => build.name === requiredName);
   }
